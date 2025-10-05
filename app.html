@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英語動詞活用練習 - Jazz Chants Rhythm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow-x: hidden;
+        }
+        
+        .jazz-bg {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .floating-notes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .music-note {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.1);
+            animation: float 8s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        .pulse-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid #fbbf24;
+            animation: pulse-expand 4s linear infinite;
+        }
+        
+        @keyframes pulse-expand {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+        
+        .verb-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .verb-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .countdown-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 2rem auto;
+        }
+        
+        .countdown-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#fbbf24 0deg, #f59e0b 0deg, #d97706 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: spin 3s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .jazz-button {
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        }
+        
+        .jazz-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+        }
+        
+        .answer-reveal {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .speak-button {
+            background: linear-gradient(45deg, #8b5cf6, #7c3aed);
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+        }
+        
+        .speak-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+        
+        .timer-container {
+            position: relative;
+            width: 40px;
+            height: 300px;
+            margin: 0 auto;
+        }
+        
+        .timer-track {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-radius: 20px;
+            border: 3px solid #cbd5e1;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .timer-bar {
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(180deg, #ef4444 0%, #fbbf24 50%, #22c55e 100%);
+            border-radius: 17px;
+            position: absolute;
+            bottom: 0;
+            transition: height 0.1s ease-out;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .timer-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+            border-radius: 17px 17px 0 0;
+        }
+        
+        .hidden { display: none !important; }
+        .show { display: block !important; }
+    </style>
+</head>
+<body>
+    <div class="jazz-bg">
+        <!-- 浮遊音符の背景 -->
+        <div class="floating-notes" id="floatingNotes"></div>
+        
+        <!-- メインコンテナ -->
+        <div class="container mx-auto px-4 py-8 relative z-10">
+            <div class="max-w-4xl mx-auto">
+                <!-- スタート画面 -->
+                <div id="startScreen">
+                    <div class="verb-card p-8 text-center">
+                        <h1 class="text-4xl font-bold text-purple-600 mb-6">
+                            <i class="fas fa-music mr-3"></i>
+                            English Verb Jazz Chants
+                            <i class="fas fa-headphones ml-3"></i>
+                        </h1>
+                        <h2 class="text-2xl font-semibold text-gray-700 mb-6">
+                            <i class="fas fa-play-circle text-green-500 mr-3"></i>
+                            練習を始めましょう！
+                        </h2>
+                        <!-- Carlosの特別メッセージ -->
+                        <div class="bg-gradient-to-r from-blue-100 to-purple-100 border-2 border-blue-300 rounded-xl p-4 mb-6 shadow-lg">
+                            <div class="flex items-center justify-center mb-3">
+                                <i class="fas fa-utensils text-orange-500 text-2xl mr-2"></i>
+                                <h3 class="text-xl font-bold text-blue-700">Carlosからの特別な約束</h3>
+                                <i class="fas fa-star text-yellow-500 text-2xl ml-2"></i>
+                            </div>
+                            <p class="text-lg font-semibold text-center text-blue-800 italic">
+                                "Let's practice 32 different verbs together! I have special surprises waiting for you!"
+                            </p>
+                            <div class="bg-yellow-50 rounded-lg p-3 mt-3 border border-yellow-200">
+                                <p class="text-lg text-center text-gray-700 font-bold">
+                                    <i class="fas fa-gift text-pink-500 mr-2"></i>
+                                    練習を続けると特別なサプライズが...？
+                                    <i class="fas fa-gift text-pink-500 ml-2"></i>
+                                </p>
+                                <p class="text-base text-center text-orange-700 font-bold mt-2">
+                                    <i class="fas fa-crown text-yellow-500 mr-1"></i>
+                                    32動詞完了：🧀 Carlos特製マカロニチーズ！
+                                </p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-6 rounded">
+                            <p class="text-lg text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-bullhorn text-orange-500 mr-2"></i>
+                                「32回のチャレンジを一緒に頑張ろう！」
+                            </p>
+                            <p class="text-lg text-gray-600">
+                                🎯 <strong>重複なし32動詞</strong>：全て違う動詞が登場！<br>
+                                ⏱️ <strong>4秒チャレンジ</strong>：「原形 過去形 過去分詞形」を声に出そう<br>
+                                🎵 <strong>120BPMドラムBGM</strong>：リズムに乗って楽しく練習<br>
+                                🎁 <strong>秘密のサプライズ</strong>：練習を続けると特別なことが...
+                            </p>
+                        </div>
+                        <button class="jazz-button" onclick="startPractice()">
+                            <i class="fas fa-rocket mr-2"></i>
+                            練習スタート！
+                        </button>
+                    </div>
+                    
+                    <!-- 動詞表示画面 -->
+                    <div id="practiceScreen" class="hidden">
+                        <div class="flex">
+                            <!-- メインコンテンツエリア -->
+                            <div class="flex-1">
+                                <!-- 応援キャラクター（練習中） -->
+                                <div class="flex justify-center mb-4">
+                                    <img src="https://page.gensparksite.com/v1/base64_upload/a6ed52f50916a5f187c81ff708582c89" 
+                                         alt="応援キャラクター" class="w-20 h-20 animate-pulse">
+                                </div>
+                                <h2 class="text-2xl font-bold text-gray-700 mb-4">
+                                    <span class="text-orange-500">「頑張れ！」</span> この動詞を活用してください：
+                                </h2>
+                                <div class="countdown-container">
+                                    <div class="countdown-circle" id="countdownCircle">
+                                        <span id="countdownNumber">4</span>
+                                    </div>
+                                </div>
+                                <div class="text-6xl font-bold text-purple-600 mb-6" id="currentVerb">
+                                    <!-- 動詞がここに表示される -->
+                                </div>
+                                
+                                <div class="text-lg text-gray-600">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    4秒以内に「原形 過去形 過去分詞形」を声に出して言ってください！
+                                </div>
+                            </div>
+                            
+                            <!-- タイマーバー -->
+                            <div class="ml-8 flex flex-col items-center">
+                                <div class="text-sm font-semibold text-gray-600 mb-2">TIME</div>
+                                <div class="timer-container">
+                                    <div class="timer-track">
+                                        <div class="timer-bar" id="timerBar"></div>
+                                    </div>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-2">4秒</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 答え表示画面 -->
+                    <div id="answerScreen" class="hidden">
+                        <!-- 応援キャラクター（答え発表） -->
+                        <div class="flex justify-center mb-6">
+                            <img src="https://page.gensparksite.com/v1/base64_upload/a6ed52f50916a5f187c81ff708582c89" 
+                                 alt="応援キャラクター" class="w-28 h-28 animate-bounce">
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-700 mb-2">
+                            <span class="text-green-600">「よくやった！」</span> 正解は...
+                        </h2>
+                        <p class="text-sm text-orange-600 font-semibold mb-4">
+                            <i class="fas fa-star mr-1"></i>
+                            リズムに合わせて一緒に言おう！
+                        </p>
+                        <div class="answer-reveal text-white">
+                            <div class="text-4xl font-bold mb-8" id="answerText">
+                                <!-- 答えがここに表示される -->
+                            </div>
+                            
+                            <div class="mt-8">
+                                <div class="text-center mb-4">
+                                    <p class="text-sm text-green-200 mb-2" id="audioStatus">
+                                        <i class="fas fa-volume-up mr-1"></i>
+                                        <span id="audioMessage">自動音声再生準備中...</span>
+                                    </p>
+                                </div>
+                                
+                                <!-- 個別音声ボタン -->
+                                <div class="flex justify-center items-center mb-4">
+                                    <div class="mx-2">
+                                        <button class="speak-button" onclick="speakAnswer('base')" title="原形を聞く">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                        <div class="text-xs text-white mt-1 text-center">原形</div>
+                                    </div>
+                                    <div class="mx-2">
+                                        <button class="speak-button" onclick="speakAnswer('past')" title="過去形を聞く">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                        <div class="text-xs text-white mt-1 text-center">過去形</div>
+                                    </div>
+                                    <div class="mx-2">
+                                        <button class="speak-button" onclick="speakAnswer('participle')" title="過去分詞形を聞く">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                        <div class="text-xs text-white mt-1 text-center">過去分詞</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 全体再生ボタン -->
+                                <div class="text-center">
+                                    <button class="jazz-button bg-green-600 hover:bg-green-700" onclick="speakFullAnswer()">
+                                        <i class="fas fa-play mr-2"></i>
+                                        全体をもう一度聞く
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <!-- 応援メッセージ -->
+                            <div class="bg-gradient-to-r from-orange-100 to-yellow-100 border border-orange-300 rounded-lg p-3 mb-4">
+                                <p class="text-orange-700 font-bold text-center">
+                                    <i class="fas fa-trophy text-yellow-500 mr-2"></i>
+                                    「素晴らしい！その調子で次も頑張ろう！」
+                                </p>
+                            </div>
+                            <button class="jazz-button mr-4" onclick="nextPractice()">
+                                <i class="fas fa-forward mr-2"></i>
+                                次の問題
+                            </button>
+                            <button class="jazz-button" onclick="backToStart()">
+                                <i class="fas fa-home mr-2"></i>
+                                ホーム
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- サプライズ差し入れ画面 -->
+                    <div id="surpriseScreen" class="hidden">
+                        <!-- Carlos特大登場 -->
+                        <div class="flex justify-center mb-6">
+                            <img src="https://page.gensparksite.com/v1/base64_upload/a6ed52f50916a5f187c81ff708582c89" 
+                                 alt="Carlos" class="w-44 h-44 animate-bounce" 
+                                 style="filter: drop-shadow(0 10px 20px rgba(255, 192, 203, 0.4));">
+                        </div>
+                        
+                        <h2 class="text-3xl font-bold text-purple-600 mb-6 text-center animate-pulse">
+                            <i class="fas fa-gift text-pink-500 mr-3"></i>
+                            SURPRISE!
+                            <i class="fas fa-surprise text-pink-500 ml-3"></i>
+                        </h2>
+                        
+                        <!-- サプライズアイテム表示エリア -->
+                        <div id="surpriseContent" class="bg-gradient-to-br from-pink-100 to-purple-100 border-4 border-pink-400 rounded-3xl p-8 mb-6 shadow-2xl">
+                            <!-- コンテンツは動的に追加 -->
+                        </div>
+                        
+                        <div class="text-center">
+                            <button class="jazz-button" onclick="closeSurprise()">
+                                <i class="fas fa-heart mr-2"></i>
+                                ありがとう！
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 満点特別画面 -->
+                    <div id="perfectScoreScreen" class="hidden">
+                        <!-- Carlos超特大お祝い -->
+                        <div class="flex justify-center mb-6">
+                            <img src="https://page.gensparksite.com/v1/base64_upload/a6ed52f50916a5f187c81ff708582c89" 
+                                 alt="Carlos" class="w-48 h-48 animate-bounce"
+                                 style="filter: drop-shadow(0 15px 30px rgba(255, 215, 0, 0.6));">
+                        </div>
+                        
+                        <h2 class="text-4xl font-bold text-yellow-600 mb-6 text-center animate-pulse">
+                            <i class="fas fa-trophy text-yellow-500 mr-3"></i>
+                            32動詞完全制覇！
+                            <i class="fas fa-crown text-yellow-500 ml-3"></i>
+                        </h2>
+                        <p class="text-xl text-center text-orange-600 font-bold mb-4">
+                            🎉 ALL 32 VERBS COMPLETED! 🎉
+                        </p>
+                        
+                        <!-- マカロニチーズイラスト -->
+                        <div class="bg-gradient-to-br from-orange-100 to-yellow-100 border-4 border-orange-400 rounded-3xl p-8 mb-6 shadow-2xl">
+                            <div class="text-center mb-6">
+                                <div class="text-8xl mb-4">🧀</div>
+                                <h3 class="text-3xl font-bold text-orange-700 mb-4">
+                                    Carlos特製マカロニチーズ！
+                                </h3>
+                                <p class="text-xl text-orange-600 italic font-semibold">
+                                    "Congratulations on mastering all 32 verbs! Here's your special macaroni and cheese!"
+                                </p>
+                            </div>
+                            
+                            <!-- マカロニチーズの美味しそうなアニメーション -->
+                            <div class="flex justify-center items-center space-x-4 text-6xl mb-4">
+                                <span class="animate-bounce" style="animation-delay: 0s;">🍝</span>
+                                <span class="animate-bounce" style="animation-delay: 0.1s;">🧀</span>
+                                <span class="animate-bounce" style="animation-delay: 0.2s;">🍝</span>
+                                <span class="animate-bounce" style="animation-delay: 0.3s;">🧀</span>
+                                <span class="animate-bounce" style="animation-delay: 0.4s;">🍝</span>
+                            </div>
+                            
+                            <p class="text-lg text-center text-orange-700">
+                                <i class="fas fa-medal text-gold-500 mr-2"></i>
+                                <strong>重複なし32動詞を全て制覇！</strong><br>
+                                すべて違う動詞で真のバラエティ学習を達成しました！
+                                <i class="fas fa-medal text-gold-500 ml-2"></i>
+                            </p>
+                            <div class="bg-yellow-50 rounded-lg p-3 mt-3 text-center">
+                                <p class="text-sm text-gray-700">
+                                    🏆 <strong>学習成果</strong>: 32種類の不規則動詞をマスター<br>
+                                    🎯 <strong>効率性</strong>: 重複なしで完全網羅<br>
+                                    🎵 <strong>リズム感</strong>: 120BPMドラムで楽しく習得
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button class="jazz-button mr-4" onclick="restartFromPerfect()">
+                                <i class="fas fa-redo mr-2"></i>
+                                もう一度チャレンジ
+                            </button>
+                            <button class="jazz-button" onclick="backToStart()">
+                                <i class="fas fa-home mr-2"></i>
+                                ホーム
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 統計表示 -->
+            <div class="max-w-md mx-auto mt-8">
+                <div class="verb-card p-6 text-center">
+                    <h3 class="text-xl font-bold text-gray-700 mb-4">
+                        <i class="fas fa-chart-line mr-2"></i>
+                        練習記録
+                    </h3>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <div class="text-2xl font-bold text-blue-600" id="practiceCount">0</div>
+                            <div class="text-sm text-gray-600">練習回数</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-green-600" id="streakCount">0</div>
+                            <div class="text-sm text-gray-600">連続記録</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-purple-600" id="uniqueVerbCount">0</div>
+                            <div class="text-sm text-gray-600">動詞種類</div>
+                            <div class="text-xs text-gray-500">/32</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 進捗バー -->
+                    <div class="mt-4">
+                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>動詞コンプリート進捗</span>
+                            <span id="progressPercentage">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500" 
+                                 id="progressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ジャズチャンツBGM用オーディオ -->
+    <audio id="bgmAudio" loop>
+        <!-- BGM は Web Audio API で生成 -->
+    </audio>
+    
+    <script>
+        // グローバル変数
+        let currentVerb = null;
+        let practiceCount = 0;
+        let streakCount = 0;
+        let countdownTimer = null;
+        let bgmContext = null;
+        let bgmGain = null;
+        let bgmIsPlaying = false;
+        let totalVerbCount = 32; // 全動詞数（32個）
+        let practicedVerbs = new Set(); // 練習済み動詞を記録（重複防止）
+        let userInteracted = false; // ユーザーインタラクション追跡
+        
+        // 動詞データベース（32動詞・重複なし）
+        const verbs = [
+            { base: "begin", past: "began", participle: "begun" },
+            { base: "come", past: "came", participle: "come" },
+            { base: "forget", past: "forgot", participle: "forgotten" },
+            { base: "go", past: "went", participle: "gone" },
+            { base: "know", past: "knew", participle: "known" },
+            { base: "meet", past: "met", participle: "met" },
+            { base: "run", past: "ran", participle: "run" },
+            { base: "sell", past: "sold", participle: "sold" },
+            { base: "speak", past: "spoke", participle: "spoken" },
+            { base: "teach", past: "taught", participle: "taught" },
+            { base: "bring", past: "brought", participle: "brought" },
+            { base: "do", past: "did", participle: "done" },
+            { base: "get", past: "got", participle: "gotten" },
+            { base: "have", past: "had", participle: "had" },
+            { base: "lose", past: "lost", participle: "lost" },
+            { base: "put", past: "put", participle: "put" },
+            { base: "say", past: "said", participle: "said" },
+            { base: "send", past: "sent", participle: "sent" },
+            { base: "swim", past: "swam", participle: "swum" },
+            { base: "tell", past: "told", participle: "told" },
+            { base: "buy", past: "bought", participle: "bought" },
+            { base: "eat", past: "ate", participle: "eaten" },
+            { base: "give", past: "gave", participle: "given" },
+            { base: "hear", past: "heard", participle: "heard" },
+            { base: "make", past: "made", participle: "made" },
+            // readの発音: 原形は「リード」、過去形・過去分詞形は「レッド」
+            { base: "read", past: "read", participle: "read", 
+              phonetic: { base: "reed", past: "red", participle: "red" } },
+            { base: "see", past: "saw", participle: "seen" },
+            { base: "sing", past: "sang", participle: "sung" },
+            { base: "take", past: "took", participle: "taken" },
+            { base: "write", past: "wrote", participle: "written" },
+            { base: "leave", past: "left", participle: "left" },
+            { base: "drink", past: "drank", participle: "drunk" }
+        ];
+        
+        // ページ読み込み時の初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            initFloatingNotes();
+            initBGM();
+            loadStats();
+        });
+        
+        // 浮遊音符の初期化
+        function initFloatingNotes() {
+            const notesContainer = document.getElementById('floatingNotes');
+            const notes = ['♪', '♫', '♬', '♩', '♭', '♯'];
+            
+            setInterval(() => {
+                if (Math.random() < 0.3) {
+                    const note = document.createElement('div');
+                    note.className = 'music-note';
+                    note.innerHTML = notes[Math.floor(Math.random() * notes.length)];
+                    note.style.left = Math.random() * 100 + '%';
+                    note.style.animationDuration = (5 + Math.random() * 5) + 's';
+                    notesContainer.appendChild(note);
+                    
+                    setTimeout(() => {
+                        note.remove();
+                    }, 10000);
+                }
+            }, 1000);
+        }
+        
+        // オーディオ初期化（BGM + 効果音）
+        function initBGM() {
+            try {
+                bgmContext = new (window.AudioContext || window.webkitAudioContext)();
+                bgmGain = bgmContext.createGain();
+                bgmGain.gain.value = 0.15; // 適度な音量
+                bgmGain.connect(bgmContext.destination);
+            } catch (e) {
+                console.log('Web Audio API not supported');
+            }
+        }
+        
+        // 120BPMドラムビートBGM再生
+        function playHappyBGM() {
+            if (!bgmContext || bgmIsPlaying) return;
+            
+            bgmIsPlaying = true;
+            
+            // 120BPM = 0.5秒で1拍 (60秒 ÷ 120拍 = 0.5秒)
+            const beatDuration = 0.5; // 1拍の長さ
+            
+            // パワフルなドラムパターン（120BPM）
+            const kick = [
+                // キックドラム - 1拍目と3拍目
+                { freq: 60, duration: 0.2, delay: 0 },
+                { freq: 60, duration: 0.2, delay: beatDuration * 2 }
+            ];
+            
+            const snare = [
+                // スネアドラム - 2拍目と4拍目  
+                { freq: 200, duration: 0.1, delay: beatDuration },
+                { freq: 200, duration: 0.1, delay: beatDuration * 3 }
+            ];
+            
+            const hihat = [
+                // ハイハット - 全拍
+                { freq: 8000, duration: 0.05, delay: 0 },
+                { freq: 8000, duration: 0.05, delay: beatDuration },
+                { freq: 8000, duration: 0.05, delay: beatDuration * 2 },
+                { freq: 8000, duration: 0.05, delay: beatDuration * 3 }
+            ];
+            
+            function playDrumPattern() {
+                if (!bgmIsPlaying) return;
+                
+                // キック音
+                kick.forEach(drum => {
+                    setTimeout(() => {
+                        if (bgmIsPlaying) playDrumSound(drum.freq, drum.duration, 0.3);
+                    }, drum.delay * 1000);
+                });
+                
+                // スネア音
+                snare.forEach(drum => {
+                    setTimeout(() => {
+                        if (bgmIsPlaying) playDrumSound(drum.freq, drum.duration, 0.2);
+                    }, drum.delay * 1000);
+                });
+                
+                // ハイハット音
+                hihat.forEach(drum => {
+                    setTimeout(() => {
+                        if (bgmIsPlaying) playDrumSound(drum.freq, drum.duration, 0.1);
+                    }, drum.delay * 1000);
+                });
+                
+                // 4拍（2秒）後に繰り返し
+                setTimeout(playDrumPattern, beatDuration * 4 * 1000);
+            }
+            
+            playDrumPattern();
+        }
+        
+        function playDrumSound(frequency, duration, volume) {
+            if (!bgmContext) return;
+            
+            const oscillator = bgmContext.createOscillator();
+            const gainNode = bgmContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(bgmGain);
+            
+            oscillator.frequency.setValueAtTime(frequency, bgmContext.currentTime);
+            oscillator.type = frequency < 100 ? 'triangle' : 'square';
+            
+            gainNode.gain.setValueAtTime(volume, bgmContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, bgmContext.currentTime + duration);
+            
+            oscillator.start(bgmContext.currentTime);
+            oscillator.stop(bgmContext.currentTime + duration);
+        }
+        
+        function stopBGM() {
+            bgmIsPlaying = false;
+        }
+        
+        // 練習開始
+        function startPractice() {
+            userInteracted = true; // ユーザーインタラクションフラグ
+            
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.remove('hidden');
+            
+            // BGM開始
+            playHappyBGM();
+            
+            // 最初の動詞を表示
+            showNewVerb();
+        }
+        
+        // 新しい動詞を表示（重複防止）
+        function showNewVerb() {
+            // 未練習の動詞をフィルタリング
+            const availableVerbs = verbs.filter(verb => !practicedVerbs.has(verb.base));
+            
+            // 全32動詞完了チェック
+            if (availableVerbs.length === 0) {
+                console.log('🎉 32動詞完了！');
+                showPerfectScore();
+                return;
+            }
+            
+            // ランダムに動詞を選択
+            currentVerb = availableVerbs[Math.floor(Math.random() * availableVerbs.length)];
+            
+            // 動詞を表示
+            document.getElementById('currentVerb').textContent = currentVerb.base;
+            
+            // カウントダウン開始
+            startCountdown();
+        }
+        
+        // 4秒カウントダウン
+        function startCountdown() {
+            let timeLeft = 4;
+            const countdownEl = document.getElementById('countdownNumber');
+            const timerBar = document.getElementById('timerBar');
+            
+            countdownEl.textContent = timeLeft;
+            timerBar.style.height = '0%';
+            
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                countdownEl.textContent = timeLeft;
+                
+                // タイマーバーの高さを更新
+                const progress = ((4 - timeLeft) / 4) * 100;
+                timerBar.style.height = progress + '%';
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    
+                    // ホイッスル音を再生
+                    playWhistleSound();
+                    
+                    // 答えを表示
+                    setTimeout(() => {
+                        showAnswer();
+                    }, 500);
+                }
+            }, 1000);
+        }
+        
+        // ホイッスル音生成
+        function playWhistleSound() {
+            if (!bgmContext || !userInteracted) return;
+            
+            const oscillator = bgmContext.createOscillator();
+            const gainNode = bgmContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(bgmContext.destination);
+            
+            oscillator.frequency.setValueAtTime(2000, bgmContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(3000, bgmContext.currentTime + 0.3);
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, bgmContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, bgmContext.currentTime + 0.3);
+            
+            oscillator.start(bgmContext.currentTime);
+            oscillator.stop(bgmContext.currentTime + 0.3);
+        }
+        
+        // 答えを表示
+        function showAnswer() {
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('answerScreen').classList.remove('hidden');
+            
+            // 答えテキストを設定
+            const answerText = `${currentVerb.base} - ${currentVerb.past} - ${currentVerb.participle}`;
+            document.getElementById('answerText').textContent = answerText;
+            
+            // 統計更新
+            practiceCount++;
+            practicedVerbs.add(currentVerb.base);
+            updateStats();
+            saveStats();
+            
+            // 1秒後に自動音声再生
+            setTimeout(() => {
+                speakFullAnswer();
+                document.getElementById('audioMessage').textContent = '自動音声再生完了';
+            }, 1000);
+            
+            // サプライズチェック（10回・20回）
+            console.log('practiceCount:', practiceCount, '回目の練習完了');
+            if (practiceCount === 10) {
+                console.log('🍟 10回目サプライズ発動！');
+                checkSurpriseRewards();
+                return; // サプライズ画面表示時は処理を停止
+            } else if (practiceCount === 20) {
+                console.log('🍦 20回目サプライズ発動！');
+                checkSurpriseRewards();
+                return; // サプライズ画面表示時は処理を停止
+            }
+            
+            // 32動詞完了チェック（ローカル統計ベース）
+            if (practicedVerbs.size >= totalVerbCount) {
+                setTimeout(() => {
+                    showPerfectScore();
+                }, 2000);
+            }
+        }
+        
+        // 個別音声再生
+        function speakAnswer(type) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance();
+                
+                let textToSpeak;
+                if (currentVerb.base === 'read' && currentVerb.phonetic) {
+                    // readの特別な発音処理
+                    switch(type) {
+                        case 'base': textToSpeak = currentVerb.phonetic.base; break;
+                        case 'past': textToSpeak = currentVerb.phonetic.past; break;
+                        case 'participle': textToSpeak = currentVerb.phonetic.participle; break;
+                    }
+                } else {
+                    textToSpeak = currentVerb[type];
+                }
+                
+                utterance.text = textToSpeak;
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9; // 少し遅めに調整
+                utterance.volume = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        function speakFullAnswer() {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance();
+                // readの特別な発音処理
+                let baseText, pastText, participleText;
+                if (currentVerb.base === 'read' && currentVerb.phonetic) {
+                    baseText = currentVerb.phonetic.base;
+                    pastText = currentVerb.phonetic.past;
+                    participleText = currentVerb.phonetic.participle;
+                } else {
+                    baseText = currentVerb.base;
+                    pastText = currentVerb.past;
+                    participleText = currentVerb.participle;
+                }
+                
+                // 適度な間隔で明瞭に
+                utterance.text = `${baseText}, ${pastText}, ${participleText}`;
+                utterance.lang = 'en-US';
+                utterance.rate = 1.0; // 標準的なテンポ
+                utterance.volume = 0.8;
+                utterance.pitch = 1.0; // 標準的なピッチ
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        // サプライズ差し入れチェック
+        function checkSurpriseRewards() {
+            console.log('サプライズチェック実行: practiceCount =', practiceCount);
+            if (practiceCount === 10) {
+                console.log('🍟 10回目サプライズ実行！');
+                showSurpriseReward('potato', '🍟', 'McDonalds French Fries', '10回練習おつかれさま！Carlosが突然マクドナルドのポテトを持ってきたよ！');
+            } else if (practiceCount === 20) {
+                console.log('🍦 20回目サプライズ実行！');
+                showSurpriseReward('icecream', '🍦', 'Häagen-Dazs Ice Cream', '20回練習達成！Carlosが突然ハーゲンダッツアイスクリームをサプライズで持ってきたよ！');
+            } else {
+                console.log('サプライズ条件に合致せず:', practiceCount);
+            }
+        }
+        
+        // サプライズ差し入れ表示
+        function showSurpriseReward(type, emojiIcon, itemName, message) {
+            // BGMを一時停止
+            stopBGM();
+            
+            // 全ての画面を非表示
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('answerScreen').classList.add('hidden');
+            
+            // サプライズ画面を表示
+            document.getElementById('surpriseScreen').classList.remove('hidden');
+            
+            // コンテンツを動的に設定
+            const surpriseContent = document.getElementById('surpriseContent');
+            
+            // HTMLを段階的に構築
+            const centerDiv = document.createElement('div');
+            centerDiv.className = 'text-center mb-6';
+            
+            const emojiDiv = document.createElement('div');
+            emojiDiv.className = 'text-8xl mb-4';
+            emojiDiv.textContent = emojiIcon;
+            
+            const titleH3 = document.createElement('h3');
+            titleH3.className = 'text-3xl font-bold text-purple-700 mb-4';
+            titleH3.textContent = itemName;
+            
+            const descP = document.createElement('p');
+            descP.className = 'text-xl text-purple-600 italic font-semibold';
+            descP.textContent = "Here's a little surprise for your hard work!";
+            
+            centerDiv.appendChild(emojiDiv);
+            centerDiv.appendChild(titleH3);
+            centerDiv.appendChild(descP);
+            
+            // アニメーション部分
+            const animDiv = document.createElement('div');
+            animDiv.className = 'flex justify-center items-center space-x-4 text-6xl mb-4';
+            
+            const animItems = [emojiIcon, '✨', emojiIcon, '✨', emojiIcon];
+            const delays = ['0s', '0.1s', '0.2s', '0.3s', '0.4s'];
+            
+            animItems.forEach((item, index) => {
+                const span = document.createElement('span');
+                span.className = 'animate-bounce';
+                span.style.animationDelay = delays[index];
+                span.textContent = item;
+                animDiv.appendChild(span);
+            });
+            
+            // メッセージ部分
+            const msgP = document.createElement('p');
+            msgP.className = 'text-lg text-center text-purple-700';
+            msgP.innerHTML = '<i class="fas fa-heart text-pink-500 mr-2"></i>' + message + '<i class="fas fa-heart text-pink-500 ml-2"></i>';
+            
+            // すべてを組み立て
+            surpriseContent.innerHTML = '';
+            surpriseContent.appendChild(centerDiv);
+            surpriseContent.appendChild(animDiv);
+            surpriseContent.appendChild(msgP);
+            
+            // 特別なお祝い音を再生
+            playSurpriseSound();
+        }
+        
+        // サプライズ音効果
+        function playSurpriseSound() {
+            if (!bgmContext || !userInteracted) return;
+            
+            // キラキラ音
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const oscillator = bgmContext.createOscillator();
+                    const gainNode = bgmContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(bgmContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(800 + i * 200, bgmContext.currentTime);
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.2, bgmContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, bgmContext.currentTime + 0.5);
+                    
+                    oscillator.start(bgmContext.currentTime);
+                    oscillator.stop(bgmContext.currentTime + 0.5);
+                }, i * 100);
+            }
+        }
+        
+        // サプライズ画面を閉じる
+        function closeSurprise() {
+            document.getElementById('surpriseScreen').classList.add('hidden');
+            
+            // BGMを再開
+            playHappyBGM();
+            
+            // 32動詞完了チェック
+            if (practicedVerbs.size >= totalVerbCount) {
+                showPerfectScore();
+            } else {
+                // 練習画面に戻る
+                document.getElementById('practiceScreen').classList.remove('hidden');
+                showNewVerb();
+            }
+        }
+        
+        // 32動詞完全制覇画面
+        function showPerfectScore() {
+            // BGMを停止
+            stopBGM();
+            
+            // 全ての画面を非表示
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('answerScreen').classList.add('hidden');
+            document.getElementById('surpriseScreen').classList.add('hidden');
+            
+            // 満点画面を表示
+            document.getElementById('perfectScoreScreen').classList.remove('hidden');
+            
+            // 特別な完了音を再生
+            playCompletionSound();
+        }
+        
+        // 完了音効果
+        function playCompletionSound() {
+            if (!bgmContext || !userInteracted) return;
+            
+            // ファンファーレ音
+            const notes = [523, 659, 784, 1047]; // C, E, G, C
+            notes.forEach((freq, index) => {
+                setTimeout(() => {
+                    const oscillator = bgmContext.createOscillator();
+                    const gainNode = bgmContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(bgmContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(freq, bgmContext.currentTime);
+                    oscillator.type = 'triangle';
+                    
+                    gainNode.gain.setValueAtTime(0.3, bgmContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, bgmContext.currentTime + 1);
+                    
+                    oscillator.start(bgmContext.currentTime);
+                    oscillator.stop(bgmContext.currentTime + 1);
+                }, index * 200);
+            });
+        }
+        
+        // 満点画面から再開
+        function restartFromPerfect() {
+            // 統計をリセット
+            practiceCount = 0;
+            streakCount = 0;
+            practicedVerbs.clear();
+            
+            // 統計を保存・表示更新
+            saveStats();
+            updateStats();
+            
+            // スタート画面に戻る
+            backToStart();
+        }
+        
+        // 次の問題
+        function nextPractice() {
+            document.getElementById('answerScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.remove('hidden');
+            showNewVerb();
+        }
+        
+        // ホーム画面に戻る
+        function backToStart() {
+            // BGMを停止
+            stopBGM();
+            
+            // 全画面を非表示
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('answerScreen').classList.add('hidden');
+            document.getElementById('surpriseScreen').classList.add('hidden');
+            document.getElementById('perfectScoreScreen').classList.add('hidden');
+            
+            // スタート画面を表示
+            document.getElementById('startScreen').classList.remove('hidden');
+        }
+        
+        // 統計更新
+        function updateStats() {
+            document.getElementById('practiceCount').textContent = practiceCount;
+            document.getElementById('streakCount').textContent = streakCount;
+            document.getElementById('uniqueVerbCount').textContent = practicedVerbs.size;
+            
+            // 進捗バー更新
+            const progress = (practicedVerbs.size / totalVerbCount) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressPercentage').textContent = Math.round(progress) + '%';
+        }
+        
+        // 統計保存
+        function saveStats() {
+            const stats = {
+                practiceCount: practiceCount,
+                streakCount: streakCount,
+                practicedVerbs: Array.from(practicedVerbs)
+            };
+            localStorage.setItem('verbPracticeStats', JSON.stringify(stats));
+        }
+        
+        // 統計読み込み
+        function loadStats() {
+            const saved = localStorage.getItem('verbPracticeStats');
+            if (saved) {
+                const stats = JSON.parse(saved);
+                practiceCount = stats.practiceCount || 0;
+                streakCount = stats.streakCount || 0;
+                practicedVerbs = new Set(stats.practicedVerbs || []);
+                updateStats();
+            }
+        }
+    </script>
+</body>
+</html>
