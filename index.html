@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英語動詞活用練習 - Jazz Chants Rhythm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow-x: hidden;
+        }
+        
+        .jazz-bg {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .floating-notes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .music-note {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.1);
+            animation: float 8s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        .verb-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .jazz-button {
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        }
+        
+        .jazz-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+        }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="jazz-bg">
+        <!-- メインコンテナ -->
+        <div class="container mx-auto px-4 py-8 relative z-10">
+            <div class="max-w-4xl mx-auto">
+                <!-- スタート画面 -->
+                <div id="startScreen">
+                    <div class="verb-card p-8 text-center">
+                        <h1 class="text-4xl font-bold text-purple-600 mb-6">
+                            <i class="fas fa-music mr-3"></i>
+                            English Verb Jazz Chants
+                            <i class="fas fa-headphones ml-3"></i>
+                        </h1>
+                        <h2 class="text-2xl font-semibold text-gray-700 mb-6">
+                            <i class="fas fa-play-circle text-green-500 mr-3"></i>
+                            練習を始めましょう！
+                        </h2>
+                        
+                        <div class="bg-gradient-to-r from-blue-100 to-purple-100 border-2 border-blue-300 rounded-xl p-4 mb-6 shadow-lg">
+                            <div class="flex items-center justify-center mb-3">
+                                <i class="fas fa-utensils text-orange-500 text-2xl mr-2"></i>
+                                <h3 class="text-xl font-bold text-blue-700">Carlosからの特別な約束</h3>
+                                <i class="fas fa-star text-yellow-500 text-2xl ml-2"></i>
+                            </div>
+                            <p class="text-lg font-semibold text-center text-blue-800 italic">
+                                "Let's practice 32 different verbs together! I have special surprises waiting for you!"
+                            </p>
+                            <div class="bg-yellow-50 rounded-lg p-3 mt-3 border border-yellow-200">
+                                <p class="text-lg text-center text-gray-700 font-bold">
+                                    <i class="fas fa-gift text-pink-500 mr-2"></i>
+                                    練習を続けると特別なサプライズが...？
+                                    <i class="fas fa-gift text-pink-500 ml-2"></i>
+                                </p>
+                                <p class="text-base text-center text-orange-700 font-bold mt-2">
+                                    <i class="fas fa-crown text-yellow-500 mr-1"></i>
+                                    32動詞完了：🧀 Carlos特製マカロニチーズ！
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <button class="jazz-button" onclick="startPractice()">
+                            <i class="fas fa-rocket mr-2"></i>
+                            練習スタート！
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 練習画面 -->
+                <div id="practiceScreen" class="hidden">
+                    <div class="verb-card p-8 text-center">
+                        <h2 class="text-2xl font-bold text-gray-700 mb-4">
+                            この動詞を活用してください：
+                        </h2>
+                        <div class="text-6xl font-bold text-purple-600 mb-6" id="currentVerb">
+                            <!-- 動詞がここに表示される -->
+                        </div>
+                        <p class="text-lg text-gray-600 mb-4">
+                            4秒以内に「原形 過去形 過去分詞形」を声に出して言ってください！
+                        </p>
+                        <div class="text-4xl font-bold text-orange-500" id="countdown">4</div>
+                    </div>
+                </div>
+                
+                <!-- 答え表示画面 -->
+                <div id="answerScreen" class="hidden">
+                    <div class="verb-card p-8 text-center">
+                        <h2 class="text-2xl font-bold text-gray-700 mb-4">正解は...</h2>
+                        <div class="bg-green-100 rounded-lg p-6 mb-6">
+                            <div class="text-4xl font-bold text-green-700" id="answerText">
+                                <!-- 答えがここに表示される -->
+                            </div>
+                        </div>
+                        <button class="jazz-button mr-4" onclick="nextPractice()">
+                            <i class="fas fa-forward mr-2"></i>
+                            次の問題
+                        </button>
+                        <button class="jazz-button" onclick="backToStart()">
+                            <i class="fas fa-home mr-2"></i>
+                            ホーム
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 動詞データベース
+        const verbs = [
+            { base: "begin", past: "began", participle: "begun" },
+            { base: "come", past: "came", participle: "come" },
+            { base: "forget", past: "forgot", participle: "forgotten" },
+            { base: "go", past: "went", participle: "gone" },
+            { base: "know", past: "knew", participle: "known" },
+            { base: "meet", past: "met", participle: "met" },
+            { base: "run", past: "ran", participle: "run" },
+            { base: "sell", past: "sold", participle: "sold" },
+            { base: "speak", past: "spoke", participle: "spoken" },
+            { base: "teach", past: "taught", participle: "taught" },
+            { base: "bring", past: "brought", participle: "brought" },
+            { base: "do", past: "did", participle: "done" },
+            { base: "get", past: "got", participle: "gotten" },
+            { base: "have", past: "had", participle: "had" },
+            { base: "lose", past: "lost", participle: "lost" },
+            { base: "put", past: "put", participle: "put" },
+            { base: "say", past: "said", participle: "said" },
+            { base: "send", past: "sent", participle: "sent" },
+            { base: "swim", past: "swam", participle: "swum" },
+            { base: "tell", past: "told", participle: "told" },
+            { base: "buy", past: "bought", participle: "bought" },
+            { base: "eat", past: "ate", participle: "eaten" },
+            { base: "give", past: "gave", participle: "given" },
+            { base: "hear", past: "heard", participle: "heard" },
+            { base: "make", past: "made", participle: "made" },
+            { base: "read", past: "read", participle: "read" },
+            { base: "see", past: "saw", participle: "seen" },
+            { base: "sing", past: "sang", participle: "sung" },
+            { base: "take", past: "took", participle: "taken" },
+            { base: "write", past: "wrote", participle: "written" },
+            { base: "leave", past: "left", participle: "left" },
+            { base: "drink", past: "drank", participle: "drunk" }
+        ];
+
+        let currentVerb = null;
+        let practiceCount = 0;
+        let practicedVerbs = new Set();
+
+        function startPractice() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.remove('hidden');
+            showNewVerb();
+        }
+
+        function showNewVerb() {
+            // 未練習の動詞をフィルタリング
+            const availableVerbs = verbs.filter(verb => !practicedVerbs.has(verb.base));
+            
+            if (availableVerbs.length === 0) {
+                alert('🎉 32動詞完了！おめでとうございます！');
+                practicedVerbs.clear();
+                return;
+            }
+
+            currentVerb = availableVerbs[Math.floor(Math.random() * availableVerbs.length)];
+            document.getElementById('currentVerb').textContent = currentVerb.base;
+            
+            startCountdown();
+        }
+
+        function startCountdown() {
+            let timeLeft = 4;
+            const countdownEl = document.getElementById('countdown');
+            
+            const timer = setInterval(() => {
+                countdownEl.textContent = timeLeft;
+                timeLeft--;
+                
+                if (timeLeft < 0) {
+                    clearInterval(timer);
+                    showAnswer();
+                }
+            }, 1000);
+        }
+
+        function showAnswer() {
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('answerScreen').classList.remove('hidden');
+            
+            const answerText = `${currentVerb.base} - ${currentVerb.past} - ${currentVerb.participle}`;
+            document.getElementById('answerText').textContent = answerText;
+            
+            practiceCount++;
+            practicedVerbs.add(currentVerb.base);
+        }
+
+        function nextPractice() {
+            document.getElementById('answerScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.remove('hidden');
+            showNewVerb();
+        }
+
+        function backToStart() {
+            document.getElementById('answerScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
